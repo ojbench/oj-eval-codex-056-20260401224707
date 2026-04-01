@@ -26,7 +26,6 @@ struct IntervalSet {
     long long insert_and_count_deleted(int l, int r) {
         if (l > r) swap(l, r);
         long long deleted = 0;
-        int nl = l, nr = r;
 
         // Find first candidate that could overlap: start from lower_bound(l)
         auto it = segs.lower_bound(l);
@@ -37,14 +36,12 @@ struct IntervalSet {
 
         // Erase all intervals that overlap [l,r] (inclusive endpoints)
         while (it != segs.end() && it->first <= r && it->second >= l) {
-            nl = min(nl, it->first);
-            nr = max(nr, it->second);
             it = segs.erase(it);
             ++deleted;
         }
 
-        // Insert the merged interval
-        segs[nl] = nr;
+        // Insert the new interval as-is
+        segs[l] = r;
         return deleted;
     }
 
